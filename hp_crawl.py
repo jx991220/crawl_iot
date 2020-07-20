@@ -19,26 +19,28 @@ config = {
 connection = pymysql.connect(**config)
 try:
     with connection.cursor() as cursor:
-        for i in range(1,3):
-            html = requests.get("http://detail.zol.com.cn/camera_equipment_advSearch/subcate377_1_m613_1_1_0_%d.html?#showc"%i)
+        for i in range(1,19):
+            html = requests.get("http://detail.zol.com.cn/printer_advSearch/subcate792_1_m223_1_1_0_%d.html?#showc"%i)
             html.encoding = 'GBK'
             etree_html = etree.HTML(html.text)
             for j in range(1, 31):
-                model = etree_html.xpath('/html/body/div[3]/form/div/div[2]/ul/li[1]/dl/dt/a/text()'%j)
+                model = etree_html.xpath('/html/body/div[3]/form/div/div[2]/ul/li[%d]/dl/dt/a/text()'%j)
                 if not model:
                     pass
                 else:
-                    insert_model = model[0][2:]
+                    insert_model = model[0][3:]
                     des1 = etree_html.xpath(
-                        '/html/body/div[3]/form/div/div[2]/ul/li[1]/dl/dd[1]/div/ul[1]/li[1]/text()' % j)
+                        '/html/body/div[3]/form/div/div[2]/ul/li[%d]/dl/dd[1]/div/ul[1]/li[1]/p/text()' % j)
+                    if not des1:
+                        des1 = [' ']
                     des2 = etree_html.xpath(
                         '/html/body/div[3]/form/div/div[2]/ul/li[%d]/dl/dd[1]/div/ul[1]/li[2]/text()' % j)
-                    des3 = etree_html.xpath(
-                        '/html/body/div[3]/form/div/div[2]/ul/li[%d]/dl/dd[1]/div/ul[1]/li[1]/text()' % j)
-                    insert_description = des1[0] + des2[0] + des3[0]
-                brandcn = '萤石'
-                branden = 'EZVIZ'
-                insert_type = '监控摄像机'
+                    if not des2:
+                        des2 = [' ']
+                    insert_description = des1[0] + des2[0]
+                brandcn = '惠普'
+                branden = 'hp'
+                insert_type = '打印机'
                 value = (str(insert_type),str(brandcn),str(branden),str(insert_model),str(insert_description))
                 insertsql(value)
     connection.commit()
