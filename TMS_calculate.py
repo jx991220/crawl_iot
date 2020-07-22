@@ -1,7 +1,4 @@
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
 import pymysql.cursors
-import re
 import Levenshtein
 
 
@@ -28,7 +25,7 @@ def main():
             xmn =[]
             for res in result:
                 model = res['model']
-                if Levenshtein.ratio(model,Qs[0])>=0.5:
+                if Levenshtein.ratio(model, Qs[18])>=0.9:
                     xmn.append(model)
             print(xmn)
             print(len(xmn))
