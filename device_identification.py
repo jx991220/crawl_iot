@@ -63,7 +63,7 @@ def judgeemptybrand(cursor, ftbl, ftbbl, type):          # 设备类型未知时
     cursor.execute(sql)
     result = cursor.fetchall()
     for e in ftbl:
-        for i in range(0,len(result)):
+        for i in range(0, len(result)):
             res = result[i]
             eng = res['brand_english']
             chn = res['brand_chinese']
@@ -126,14 +126,14 @@ def preselectmodel(ftbll, list):            # 选出设备型号描述词并按�
 
 def judgemodel(ftbll, premodel, srm):                # 判断设备型号
     model = '未知'
-    tms = 0.6
+    tms = 0.7
     for everyftbll in ftbll:
         if premodel:
             preadd = premodel + ' ' + everyftbll
         else:
             preadd = premodel + everyftbll
         for everysrm in srm:
-            if Levenshtein.ratio(preadd, everysrm) > tms:             #
+            if Levenshtein.ratio(preadd, everysrm) > tms:             # 选取相似度最高的型号
                 model = everysrm
                 tms = Levenshtein.ratio(preadd, everysrm)
     return model
@@ -194,7 +194,7 @@ def main():                                          # 程序主函数
                 ftbl = []
                 ftbll = []
                 for eve in word_tokens:
-                    ever = re.split(r'[=\\/]',eve)               # 将\=/三种特殊符号删去并由此分割开
+                    ever = re.split(r'[=\\/]', eve)               # 将\=/三种特殊符号删去并由此分割开
                     for w in ever:
                         if bool(re.search(r'\d', w)) or bool(re.search('[a-z]', w)):  # 判断字符串中是否含有数字或字母，没有的直接删去
                             if w not in stop_words:             # 去除停用词
